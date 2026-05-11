@@ -78,19 +78,45 @@ The frontend will run on `http://localhost:5173`. Open this link in your browser
 
 ---
 
-## ☁️ Deployment (Railway)
+## 🧪 Testing the Project Features
 
-This repository is completely pre-configured for a seamless, single-service deployment on [Railway.app](https://railway.app/).
+Once your local servers are running, follow these steps to test the full RBAC (Role-Based Access Control) flow:
+
+### 1. Test the Admin Flow
+1. Open the app and click **Register**.
+2. Create an account with the role set to **ADMIN**.
+3. **Dashboard:** You will see a high-level overview of the entire system (all projects, all tasks).
+4. **Projects:** Navigate to the Projects tab and create a new project. You can also edit existing projects.
+5. **Tasks:** Navigate to the Tasks tab, create a new task, and assign it to a project.
+
+### 2. Test the Member Flow
+1. Open the app in an Incognito window (or log out) and click **Register**.
+2. Create an account with the role set to **MEMBER**.
+3. **Restricted View:** Notice that your Dashboard and Tasks page are empty. This is because you haven't been assigned anything yet!
+4. **Assign a Task:** Go back to your **Admin** window, edit a task, and set the "Assignee" to your newly created Member account.
+5. **Verify Access:** Refresh your **Member** window. You will now see the assigned task on your dashboard, and the project it belongs to will become visible in your Projects tab. As a member, you can change the status of the task (e.g., from *To Do* to *Done*), but you cannot edit its core details or delete it.
+
+---
+
+## ☁️ Deployment (Render - Free)
+
+This repository is fully configured with a robust `Dockerfile` for a seamless, completely free deployment on [Render.com](https://render.com/).
 
 1. Push this repository to your GitHub account.
-2. Log into Railway and click **New Project** > **Deploy from GitHub repo**.
-3. Select your repository. 
+2. Sign into Render.com and click **New +** > **Web Service**.
+3. Select **"Deploy from a GitHub repo"** and choose your repository. 
+4. On the setup page, leave everything as default:
+   - **Language:** Docker
+   - **Branch:** `main`
+   - **Instance Type:** Free
+5. Click **Create Web Service**.
 
 **What happens automatically?**
-- Railway detects the `railway.json` configuration file.
-- It executes `bash build.sh`, which builds the highly-optimized React production bundle and moves it into the backend's static delivery folder.
-- It starts the FastAPI server using the exact configurations required for production.
-- Your application will be live in under 2 minutes!
+- Render reads the `Dockerfile` and creates a secure Linux container.
+- **Stage 1:** It installs Node.js, installs frontend dependencies, and builds the highly-optimized React production bundle.
+- **Stage 2:** It installs Python, sets up the FastAPI backend, and securely transfers the React production files into the backend's static delivery folder.
+- It boots up the FastAPI server, binding to Render's dynamic ports.
+- Your application will be live and accessible via a public URL in a few minutes!
 
 ---
 
@@ -111,8 +137,8 @@ taskManager/
 │   │   ├── index.css         # Premium Design System
 │   │   └── pages/            # Dashboard, Login, Projects, Tasks
 │   └── vite.config.js        # Build configuration
-├── build.sh                  # Railway deployment build script
-├── railway.json              # Railway environment configuration
+├── Dockerfile                # Render deployment configuration
+├── .dockerignore             # Docker build optimization
 └── requirements.txt          # Python dependencies
 ```
 
